@@ -39,20 +39,32 @@
             }
         });
 
+        $j('#mosaic_container .box').each(function () {
+            var el = $j(this);
+
+            el.data('original_width', el.width());
+            el.data('original_height', el.height());
+        })
+
         $j('#mosaic_container .box').click(function() {
+            if ($j(this).hasClass('expanded')) return;
+
+            var expanded = $j('#mosaic_container .box.expanded');
+
+            expanded.animate({width: expanded.data('original_width'), height: expanded.data('original_height'), zIndex: ''}, 1000);
+            expanded.find('img').animate({width: expanded.data('original_width'), height: expanded.data('original_height'), zIndex: ''}, 1000);
+            expanded.find('.details').fadeOut(100);
+
             $j('#mosaic_container .box').removeClass('expanded');
-            $j('#mosaic_container .box .details').fadeOut(100);
-            $j('#mosaic_container .box').css({width: '', height: '', zIndex: ''});
-            $j('#mosaic_container .box').css({width: '', height: '', zIndex: ''});
-            $j('#mosaic_container .box img').css({width: '', height: ''});
-            $j(this).css({zIndex: 999})
+
+            $j(this).css({zIndex: 999});
             $j(this).addClass('clicked');
-//            $j(this).animate({width: largeSize, height: largeSize}, 1000, function() {
+
+            if ($j(this).prev().length > 0) {
                 $j('#mosaic_container .box').first().before(this);
-                $j('#mosaic_container').masonry('reload');
-//            })
-//            $j(this).find('img').animate({width: largeSize, height: largeSize}, 1000);
-//            $j('#mosaic_container').masonry('reload');
+            }
+
+            $j('#mosaic_container').masonry('reload');
         })
     })
 </script>
